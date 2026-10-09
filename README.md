@@ -23,6 +23,10 @@ The app uses ES modules and needs an HTTP server; do not open `index.html` throu
 
 Choose a control group, add keyboard/mouse/wheel bindings, and preview, copy or download `anyps5-input.ini`. Search covers all groups. Arrow keys, Home and End navigate the group selector. Keyboard capture uses physical key positions as SDL scancodes; browser and OS shortcuts may require manual selection.
 
+Controls, Configuration and Help are separate views. Configuration replaces the input editor and provides the full-width preview and export controls; switching views preserves your bindings. Help contains expandable answers to common setup questions.
+
+Open Settings using the gear button to choose from 22 interface and FAQ languages, with Egyptian Arabic first and selected by default. Arabic, Urdu and Persian use a right-to-left layout. The language preference is saved locally; input configurations are still kept in memory. SDL key names and INI identifiers remain canonical English tokens. Detailed status and diagnostic strings use English fallbacks outside Egyptian Arabic.
+
 Only configured actions are exported. Their first binding replaces built-in inputs; further bindings are alternatives. Omitted actions retain their built-in inputs. Removing all bindings restores defaults rather than disabling an action. Physical controller mapping is handled separately by AnyPS5.
 
 Save the exported file beside the generated game executable, or point `ANYPS5_INPUT_CONFIG` at it. Invalid bindings block export; duplicates and shared inputs are reported. Imports report line errors and preserve the current configuration when invalid. The app targets the upstream parser snapshot listed in [UPSTREAM.md](UPSTREAM.md), which must be revisited if AnyPS5 changes its format.

@@ -2,6 +2,7 @@ import {actions, defaults, groups, mouseValues, typesForAction, wheelValues} fro
 import {exportableKeys} from './keys.js';
 import {captureKey} from './capture.js';
 import {parseIni, serialize, validate} from './validation.js';
+import {diagnostic, locales, translate} from './i18n.js';
 
 const byId = id => document.getElementById(id);
 let entries = [];
@@ -9,7 +10,92 @@ let savedConfiguration = '[]';
 let captureTarget;
 let captureButton;
 let selectedGroup = groups[0].name;
+let locale = 'ar-EG';
+let activeView = ['controls', 'configuration', 'help'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'controls';
+let currentStatus;
+let importReport;
 const dialog = byId('capture-dialog');
+try {
+    const savedLocale = localStorage.getItem('anyps5-controls-language');
+    if (locales.some(item => item.code === savedLocale)) locale = savedLocale;
+} catch {}
+const t = (key, values) => translate(locale, key, values);
+const groupLabel = name => t(`group${groups.findIndex(group => group.name === name)}`);
+
+function setStatus(key, values = {}) {
+    currentStatus = {key, values};
+    byId('status').textContent = t(key, values);
+}
+
+function showView(view, focus = true, updateHash = true) {
+    activeView = view;
+    const controls = view === 'controls';
+    byId('categories').hidden = !controls;
+    byId('toolbar').hidden = !controls;
+    byId('mappings').hidden = !controls;
+    byId('configuration').hidden = view !== 'configuration';
+    byId('help').hidden = view !== 'help';
+    byId('validation').hidden = view === 'help';
+    byId('status').hidden = view === 'help';
+    byId('import-report').hidden = view === 'help' || !importReport;
+    byId('view-intro').textContent = t(controls ? 'intro' : view === 'help' ? 'helpIntro' : 'configIntro');
+    if (controls) filterActions();
+    else byId('group-title').textContent = t(view);
+    for (const link of document.querySelectorAll('[data-view]')) {
+        const current = link.dataset.view === view;
+        link.classList.toggle('current', current);
+        if (current) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+    }
+    if (updateHash && location.hash !== `#${view}`) history.pushState(null, '', `#${view}`);
+    if (focus) {
+        byId('content').focus({preventScroll: true});
+        window.scrollTo({top: 0, behavior: 'auto'});
+    }
+}
+
+function renderHelp() {
+    const opened = [...byId('help').querySelectorAll('details')].map(item => item.open);
+    byId('help').replaceChildren();
+    for (let index = 0; index < 4; index++) {
+        const question = element('details', undefined, 'faq');
+        question.open = opened[index] || false;
+        question.append(element('summary', t(`faq${index}Question`)), element('p', t(`faq${index}Answer`)));
+        byId('help').append(question);
+    }
+    byId('help').append(element('p', t('technicalNote'), 'hint'));
+}
+
+function renderImportReport() {
+    if (!importReport) return;
+    const report = byId('import-report');
+    report.replaceChildren(element('h2', t(importReport.errors.length ? 'importRejected' : 'importRead')));
+    const messages = [...importReport.errors, ...importReport.warnings];
+    if (messages.length) {
+        const list = element('ul');
+        for (const item of messages) list.append(element('li', t('line', {line: item.line, message: diagnostic(locale, item.message)})));
+        report.append(list);
+    }
+    if (importReport.errors.length) report.append(element('p', t('preserved'), 'error'));
+    report.hidden = false;
+}
+
+function applyLocale() {
+    document.documentElement.lang = locale;
+    document.documentElement.dir = locales.find(item => item.code === locale).direction;
+    for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = t(node.dataset.i18n);
+    for (const node of document.querySelectorAll('[data-i18n-label]')) node.setAttribute('aria-label', t(node.dataset.i18nLabel));
+    for (const node of document.querySelectorAll('[data-i18n-placeholder]')) node.placeholder = t(node.dataset.i18nPlaceholder);
+    byId('language').value = locale;
+    byId('categories').replaceChildren();
+    renderCategories();
+    renderHelp();
+    render();
+    renderImportReport();
+    if (currentStatus) setStatus(currentStatus.key, currentStatus.values);
+    showView(activeView, false, false);
+    updateClock();
+}
 
 function element(tag, text, className) {
     const node = document.createElement(tag);
@@ -39,7 +125,7 @@ function valueChoices(type) {
 function selectControl(label, choices, value) {
     const select = element('select');
     select.setAttribute('aria-label', label);
-    const empty = element('option', 'Select…');
+    const empty = element('option', t('select'));
     empty.value = '';
     select.append(empty);
     for (const choice of choices) {
@@ -60,11 +146,10 @@ function button(text, label, click) {
 }
 
 function renderCategories() {
-    const labels = ['Face buttons', 'Shoulders', 'D-pad', 'Left stick', 'Right stick', 'Touch & utility'];
     const icons = ['face-icon', 'shoulder-icon', 'direction-icon', 'stick-icon', 'stick-icon', 'touch-icon'];
     const symbols = ['△ ○ × □', 'L2 R2', '', 'L', 'R', ''];
     groups.forEach((group, index) => {
-        const category = button('', group.name, () => {
+        const category = button('', groupLabel(group.name), () => {
             selectedGroup = group.name;
             byId('search').value = '';
             filterActions();
@@ -78,9 +163,10 @@ function renderCategories() {
             for (const symbol of symbols[index].split(' ')) mark.append(element('span', symbol));
         } else mark.textContent = symbols[index];
         icon.append(mark);
-        category.append(icon, element('span', labels[index], 'category-label'));
+        category.append(icon, element('span', t(`group${index}`), 'category-label'));
         category.addEventListener('keydown', event => {
-            const offset = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0;
+            const direction = document.documentElement.dir === 'rtl' ? -1 : 1;
+            const offset = event.key === 'ArrowRight' ? direction : event.key === 'ArrowLeft' ? -direction : 0;
             if (!offset && event.key !== 'Home' && event.key !== 'End') return;
             event.preventDefault();
             const next = event.key === 'Home' ? 0 : event.key === 'End' ? groups.length - 1 : (index + offset + groups.length) % groups.length;
@@ -95,18 +181,20 @@ function renderCategories() {
 
 function renderBinding(entry, position) {
     const row = element('div', undefined, 'binding');
-    const label = `${entry.action} binding ${position + 1}`;
-    const type = selectControl(`${label} input type`, typesForAction(entry.action), entry.type);
-    const value = selectControl(`${label} input value`, valueChoices(entry.type), entry.value);
-    const capture = button('Capture', `Capture key for ${label}`, () => {
+    const label = t('bindingLabel', {action: entry.action, number: position + 1});
+    const type = selectControl(t('typeLabel', {binding: label}), typesForAction(entry.action), entry.type);
+    const value = selectControl(t('valueLabel', {binding: label}), valueChoices(entry.type), entry.value);
+    type.dir = 'ltr';
+    value.dir = 'ltr';
+    const capture = button(t('capture'), t('captureLabel', {binding: label}), () => {
         captureTarget = entry;
         captureButton = capture;
-        byId('capture-title').textContent = `Press a key for ${entry.action}`;
+        byId('capture-title').textContent = t('captureTitle', {action: entry.action});
         byId('capture-status').textContent = '';
         dialog.showModal();
     });
     capture.disabled = entry.type !== 'KEY';
-    const remove = button('Remove', `Remove ${label}`, () => {
+    const remove = button(t('remove'), t('removeLabel', {binding: label}), () => {
         entries = entries.filter(binding => binding !== entry);
         render();
         const remaining = document.querySelector(`[data-action="${entry.action}"] .binding select`);
@@ -115,7 +203,7 @@ function renderBinding(entry, position) {
     type.addEventListener('change', () => {
         entry.type = type.value;
         entry.value = '';
-        value.replaceChildren(element('option', 'Select…'));
+        value.replaceChildren(element('option', t('select')));
         value.firstChild.value = '';
         for (const choice of valueChoices(entry.type)) {
             const option = element('option', choice);
@@ -139,12 +227,12 @@ function render() {
     for (const group of groups) {
         const section = element('section', undefined, 'group');
         section.dataset.group = group.name;
-        section.append(element('h2', group.name));
+        section.append(element('h2', groupLabel(group.name)));
         for (const action of group.actions) {
             const article = element('div', undefined, 'action');
             article.dataset.action = action;
             const heading = element('div', undefined, 'action-heading');
-            const add = button('+ Add binding', `Add binding to ${action}`, () => {
+            const add = button(t('add'), t('addLabel', {action}), () => {
                 entries.push({action, type: 'KEY', value: ''});
                 render();
                 const rows = document.querySelectorAll(`[data-action="${action}"] .binding`);
@@ -158,11 +246,13 @@ function render() {
                 symbol.setAttribute('aria-hidden', 'true');
                 title.append(symbol);
             }
-            title.append(element('h3', action));
+            const actionName = element('h3', action);
+            actionName.dir = 'ltr';
+            title.append(actionName);
             heading.append(title, add);
             article.append(heading);
             const configured = entries.filter(entry => entry.action === action);
-            article.append(element('p', configured.length ? 'Custom inputs replace built-in inputs.' : `Built-in: ${defaults[action].join(', ') || 'no keyboard or mouse binding'}`, 'hint'));
+            article.append(element('p', configured.length ? t('custom') : t('builtin', {inputs: defaults[action].join(', ') || t('noDefault')}), 'hint'));
             configured.forEach((entry, position) => article.append(renderBinding(entry, position)));
             section.append(article);
         }
@@ -174,7 +264,7 @@ function render() {
 
 function filterActions() {
     const search = byId('search').value.trim().toLowerCase();
-    byId('group-title').textContent = search ? 'Search results' : selectedGroup;
+    if (activeView === 'controls') byId('group-title').textContent = search ? t('search') : groupLabel(selectedGroup);
     for (const category of byId('categories').children) {
         category.setAttribute('aria-pressed', String(!search && category.dataset.group === selectedGroup));
     }
@@ -182,7 +272,7 @@ function filterActions() {
     for (const section of document.querySelectorAll('.group')) {
         let matches = 0;
         for (const action of section.querySelectorAll('.action')) {
-            action.hidden = search ? !`${section.dataset.group} ${action.dataset.action}`.toLowerCase().includes(search) : section.dataset.group !== selectedGroup;
+            action.hidden = search ? !`${section.dataset.group} ${groupLabel(section.dataset.group)} ${action.dataset.action}`.toLowerCase().includes(search) : section.dataset.group !== selectedGroup;
             if (!action.hidden) matches++;
         }
         section.hidden = matches === 0;
@@ -190,7 +280,7 @@ function filterActions() {
     }
     let empty = byId('no-results');
     if (!empty) {
-        empty = element('p', 'No actions match your search.', 'hint');
+        empty = element('p', t('noResults'), 'hint');
         empty.id = 'no-results';
         byId('mappings').append(empty);
     }
@@ -201,7 +291,7 @@ function updateOutput() {
     const result = validate(entries);
     const valid = result.errors.length === 0;
     byId('preview').value = valid ? serialize(entries) : '';
-    byId('count').textContent = `${new Set(result.bindings.map(binding => binding.action)).size} / ${actions.length} actions`;
+    byId('count').textContent = `${new Set(result.bindings.map(binding => binding.action)).size} / ${actions.length}`;
     byId('download').disabled = !valid;
     byId('copy').disabled = !valid;
     const report = byId('validation');
@@ -209,7 +299,7 @@ function updateOutput() {
     for (const [name, messages] of [['error', result.errors], ['warning', result.warnings]]) {
         if (!messages.length) continue;
         const list = element('ul', undefined, name);
-        for (const item of messages) list.append(element('li', item.message));
+        for (const item of messages) list.append(element('li', diagnostic(locale, item.message)));
         report.append(list);
     }
     const rows = [...document.querySelectorAll('.binding')];
@@ -224,29 +314,29 @@ function cancelCapture(message) {
     captureTarget = undefined;
     dialog.close();
     captureButton?.focus();
-    if (message) byId('status').textContent = message;
+    if (message) setStatus(message);
 }
 
-byId('cancel-capture').addEventListener('click', () => cancelCapture('Capture cancelled.'));
+byId('cancel-capture').addEventListener('click', () => cancelCapture('captureCancelled'));
 dialog.addEventListener('cancel', event => {
     event.preventDefault();
-    cancelCapture('Capture cancelled.');
+    cancelCapture('captureCancelled');
 });
 window.addEventListener('blur', () => {
-    if (captureTarget) cancelCapture('Capture cancelled because the window lost focus.');
+    if (captureTarget) cancelCapture('captureBlur');
 });
 window.addEventListener('keydown', event => {
     if (!captureTarget) return;
     event.preventDefault();
     event.stopImmediatePropagation();
     if (event.code === 'Escape' || event.key === 'Escape') {
-        cancelCapture('Capture cancelled.');
+        cancelCapture('captureCancelled');
         return;
     }
     if (event.repeat) return;
     const result = captureKey(event);
     if (result.error) {
-        byId('capture-status').textContent = result.error;
+        byId('capture-status').textContent = diagnostic(locale, result.error);
         return;
     }
     const target = captureTarget;
@@ -256,7 +346,7 @@ window.addEventListener('keydown', event => {
     const position = entries.filter(entry => entry.action === target.action).indexOf(target);
     article.querySelectorAll('.binding')[position].querySelectorAll('select')[1].value = result.value;
     updateOutput();
-    byId('status').textContent = `Captured ${result.value} for ${target.action}.`;
+    setStatus('captured', {value: result.value, action: target.action});
 }, true);
 
 byId('search').addEventListener('input', filterActions);
@@ -264,9 +354,10 @@ byId('reset').addEventListener('click', async () => {
     if (!await confirmReplacement()) return;
     entries = [];
     savedConfiguration = '[]';
+    importReport = undefined;
     byId('import-report').hidden = true;
     render();
-    byId('status').textContent = 'Configuration reset. All actions use built-in inputs.';
+    setStatus('resetDone');
 });
 byId('import').addEventListener('click', () => byId('file').click());
 byId('file').addEventListener('change', async event => {
@@ -274,20 +365,13 @@ byId('file').addEventListener('change', async event => {
     if (!file) return;
     event.target.value = '';
     try {
-        if (file.size > 1024 * 1024) throw new Error('INI file must be smaller than 1 MiB.');
+        if (file.size > 1024 * 1024) throw new Error(t('fileTooLarge'));
         const text = new TextDecoder('utf-8', {fatal: true}).decode(await file.arrayBuffer());
         const result = parseIni(text);
         const report = byId('import-report');
-        report.replaceChildren(element('h2', result.errors.length ? 'Import rejected' : 'Import read successfully'));
-        const messages = [...result.errors, ...result.warnings];
-        if (messages.length) {
-            const list = element('ul');
-            for (const item of messages) list.append(element('li', `Line ${item.line}: ${item.message}`));
-            report.append(list);
-        }
-        report.hidden = false;
+        importReport = result;
+        renderImportReport();
         if (result.errors.length) {
-            report.append(element('p', 'Your current configuration has been preserved.', 'error'));
             report.focus();
             return;
         }
@@ -295,9 +379,9 @@ byId('file').addEventListener('change', async event => {
         entries = result.entries;
         savedConfiguration = JSON.stringify(entries);
         render();
-        byId('status').textContent = `Imported ${file.name}.`;
+        setStatus('imported', {name: file.name});
     } catch (error) {
-        byId('status').textContent = `Import failed: ${error.message}`;
+        setStatus('importFailed', {message: error instanceof TypeError ? t('invalidUtf8') : error.message});
     }
 });
 byId('download').addEventListener('click', () => {
@@ -311,7 +395,7 @@ byId('download').addEventListener('click', () => {
     link.remove();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
     savedConfiguration = JSON.stringify(entries);
-    byId('status').textContent = 'Configuration download requested.';
+    setStatus('downloaded');
 });
 byId('copy').addEventListener('click', async () => {
     try {
@@ -319,11 +403,11 @@ byId('copy').addEventListener('click', async () => {
         const copiedConfiguration = JSON.stringify(entries);
         await navigator.clipboard.writeText(content);
         savedConfiguration = copiedConfiguration;
-        byId('status').textContent = 'Configuration copied.';
+        setStatus('copied');
     } catch {
         byId('preview').focus();
         byId('preview').select();
-        byId('status').textContent = 'Clipboard unavailable. Copy the selected preview with Ctrl+C.';
+        setStatus('clipboardFailed');
     }
 });
 window.addEventListener('beforeunload', event => {
@@ -331,13 +415,42 @@ window.addEventListener('beforeunload', event => {
     event.preventDefault();
     event.returnValue = '';
 });
-byId('focus-search').addEventListener('click', () => byId('search').focus());
+byId('focus-search').addEventListener('click', () => {
+    showView('controls');
+    byId('search').focus();
+});
+for (const link of document.querySelectorAll('[data-view]')) {
+    link.addEventListener('click', event => {
+        event.preventDefault();
+        showView(link.dataset.view);
+    });
+}
+byId('back-controls').addEventListener('click', () => showView('controls'));
+function restoreView() {
+    const view = location.hash.slice(1);
+    if (['controls', 'configuration', 'help'].includes(view)) showView(view, false, false);
+    else if (!view) showView('controls', false, false);
+}
+window.addEventListener('popstate', restoreView);
+window.addEventListener('hashchange', restoreView);
+for (const item of locales) {
+    const option = element('option', item.name);
+    option.value = item.code;
+    option.lang = item.code;
+    option.dir = item.direction;
+    byId('language').append(option);
+}
+byId('settings').addEventListener('click', () => byId('settings-dialog').showModal());
+byId('language').addEventListener('change', event => {
+    locale = event.target.value;
+    try { localStorage.setItem('anyps5-controls-language', locale); } catch {}
+    applyLocale();
+});
 function updateClock() {
     const now = new Date();
-    byId('clock').textContent = new Intl.DateTimeFormat('en-GB', {hour: '2-digit', minute: '2-digit'}).format(now);
+    byId('clock').textContent = new Intl.DateTimeFormat(locale, {hour: '2-digit', minute: '2-digit'}).format(now);
     byId('clock').dateTime = now.toISOString();
 }
 updateClock();
 setInterval(updateClock, 60000);
-renderCategories();
-render();
+applyLocale();
