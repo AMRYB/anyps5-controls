@@ -1,0 +1,46 @@
+# AnyPS5 Controls
+
+A browser-based keyboard and mouse input configurator for [AnyPS5](https://github.com/boykopovar/AnyPS5), maintained by Amr Yasser. This independent companion repository is not an official AnyPS5 release or an emulator.
+
+## Use locally
+
+Requires Node.js 22 or later. No dependency installation is needed.
+
+```sh
+npm start
+```
+
+Open http://127.0.0.1:4173. If that port is occupied, choose another port with the `PORT` environment variable. In PowerShell:
+
+```powershell
+$env:PORT = '4174'
+npm start
+```
+
+The app uses ES modules and needs an HTTP server; do not open `index.html` through `file://`. All configuration processing happens in the browser. Export before reloading because edits are kept in memory.
+
+## Configure inputs
+
+Choose a control group, add keyboard/mouse/wheel bindings, and preview, copy or download `anyps5-input.ini`. Search covers all groups. Arrow keys, Home and End navigate the group selector. Keyboard capture uses physical key positions as SDL scancodes; browser and OS shortcuts may require manual selection.
+
+Only configured actions are exported. Their first binding replaces built-in inputs; further bindings are alternatives. Omitted actions retain their built-in inputs. Removing all bindings restores defaults rather than disabling an action. Physical controller mapping is handled separately by AnyPS5.
+
+Save the exported file beside the generated game executable, or point `ANYPS5_INPUT_CONFIG` at it. Invalid bindings block export; duplicates and shared inputs are reported. Imports report line errors and preserve the current configuration when invalid. The app targets the upstream parser snapshot listed in [UPSTREAM.md](UPSTREAM.md), which must be revisited if AnyPS5 changes its format.
+
+## Test
+
+```sh
+npm test
+```
+
+The suite checks serialization, input restrictions, imports, conflicts and keyboard conversion. Two source-contract tests use pinned C++ snapshots under `tests/fixtures`; they do not compile or execute the emulator.
+
+## Hosting
+
+Serve the repository root with any static HTTP host. GitHub Pages can serve the root of `main` without a build step; `.nojekyll` is included. Hosting is configured separately from the source code.
+
+## Credits and license
+
+Interface: © Amr Yasser. AnyPS5 action definitions, defaults and parser snapshots originate from the AnyPS5 project and its contributors. This distribution includes the upstream [GNU GPL v2 license](LICENSE). See [UPSTREAM.md](UPSTREAM.md) for provenance and pinned versions.
+
+The interface uses system fonts and supports keyboard navigation and reduced-motion preferences.

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>AnyPS5 · Input mapper</title>
+    <link rel="stylesheet" href="styles.css">
+    <script type="module" src="app.js"></script>
+</head>
+<body>
+    <div class="ambient" aria-hidden="true"><div class="ambient-glow"></div><div class="particles"></div><div class="particles distant"></div></div>
+    <a class="skip-link" href="#mappings">Skip to mappings</a>
+    <header>
+        <a class="brand" href="https://github.com/boykopovar/AnyPS5">AnyPS5</a>
+        <nav class="system-nav" aria-label="Main navigation"><a class="current" href="#categories">Controls</a><a href="#configuration">Configuration</a></nav>
+        <div class="system-tools">
+            <button id="focus-search" class="icon-button" type="button" aria-label="Find an action"><span class="search-icon" aria-hidden="true"></span></button>
+            <a class="docs icon-button" aria-label="Format documentation" href="https://github.com/boykopovar/AnyPS5/blob/main/docs/user/INPUT_MAPPING.md"><span aria-hidden="true">⚙</span></a>
+            <time id="clock" aria-label="Local time"></time>
+        </div>
+    </header>
+    <main>
+        <nav id="categories" aria-label="Control groups"></nav>
+        <div class="intro">
+            <p class="eyebrow">Accessories / Custom controls</p>
+            <h1 id="group-title">Face buttons</h1>
+            <p>Choose a control, then assign your keyboard or mouse inputs.</p>
+        </div>
+        <div class="toolbar">
+            <label class="search"><span class="sr-only">Find an action</span><input id="search" type="search" placeholder="Search controls" autocomplete="off"></label>
+            <div class="tools">
+                <button id="import" type="button">Import INI</button>
+                <input id="file" type="file" accept=".ini,text/plain" hidden>
+                <button id="reset" type="button">Reset</button>
+            </div>
+        </div>
+        <div class="workspace">
+            <div id="mappings" tabindex="-1" aria-label="Input mappings"></div>
+            <aside id="configuration" aria-label="Configuration output" tabindex="-1">
+                <div class="output-heading"><h2>Configuration</h2><span id="count" class="tag">0 actions</span></div>
+                <p class="hint">Save the file beside your generated game executable, or use <code>ANYPS5_INPUT_CONFIG</code>.</p>
+                <label for="preview">anyps5-input.ini</label>
+                <textarea id="preview" readonly spellcheck="false" placeholder="Add a binding to begin."></textarea>
+                <div id="validation" aria-live="polite"></div>
+                <div class="export-actions">
+                    <button id="download" class="primary" type="button">Download INI</button>
+                    <button id="copy" type="button">Copy configuration</button>
+                </div>
+                <p class="hint">Removing all bindings restores that action’s built-in inputs. This format cannot disable an action.</p>
+                <p id="status" role="status"></p>
+            </aside>
+        </div>
+        <section id="import-report" hidden aria-label="Import diagnostics" tabindex="-1"></section>
+    </main>
+    <footer><span>© Amr Yasser</span><span class="navigation-hint"><kbd>←</kbd><kbd>→</kbd> Switch group <span class="footer-divider"></span><kbd>Tab</kbd> Move focus</span></footer>
+    <dialog id="capture-dialog" aria-labelledby="capture-title" aria-describedby="capture-help">
+        <h2 id="capture-title">Press a key</h2>
+        <p id="capture-help">Capture uses physical key positions, like SDL scancodes. Press Escape to cancel. Select Escape from the key list to bind it. Some OS and browser shortcuts cannot be intercepted.</p>
+        <p id="capture-status" role="status"></p>
+        <button id="cancel-capture" type="button" autofocus>Cancel capture</button>
+    </dialog>
+    <dialog id="replace-dialog" aria-labelledby="replace-title" aria-describedby="replace-help">
+        <h2 id="replace-title">Discard unsaved changes?</h2>
+        <p id="replace-help">Download or copy your configuration first if you want to keep it.</p>
+        <form method="dialog">
+            <button type="submit" value="cancel" autofocus>Keep editing</button>
+            <button type="submit" value="discard">Discard changes</button>
+        </form>
+    </dialog>
+    <noscript>This configurator needs JavaScript enabled.</noscript>
+</body>
+</html>
