@@ -2,7 +2,8 @@ import {actions, defaults, groups, mouseValues, typesForAction, wheelValues} fro
 import {exportableKeys} from './keys.js';
 import {captureKey} from './capture.js';
 import {parseIni, serialize, validate} from './validation.js';
-import {diagnostic, locales, translate} from './i18n.js';
+import {diagnostic, initialLocale, locales, translate} from './i18n.js';
+import {createDropdown} from './dropdown.js';
 
 const byId = id => document.getElementById(id);
 let entries = [];
@@ -10,14 +11,16 @@ let savedConfiguration = '[]';
 let captureTarget;
 let captureButton;
 let selectedGroup = groups[0].name;
-let locale = 'ar-EG';
+let locale = initialLocale();
+let languageControl;
+const bindingControls = new WeakMap();
 let activeView = ['controls', 'configuration', 'help'].includes(location.hash.slice(1)) ? location.hash.slice(1) : 'controls';
 let currentStatus;
 let importReport;
 const dialog = byId('capture-dialog');
 try {
     const savedLocale = localStorage.getItem('anyps5-controls-language');
-    if (locales.some(item => item.code === savedLocale)) locale = savedLocale;
+    locale = initialLocale(savedLocale);
 } catch {}
 const t = (key, values) => translate(locale, key, values);
 const groupLabel = name => t(`group${groups.findIndex(group => group.name === name)}`);
@@ -63,7 +66,6 @@ function renderHelp() {
         question.append(element('summary', t(`faq${index}Question`)), element('p', t(`faq${index}Answer`)));
         byId('help').append(question);
     }
-    byId('help').append(element('p', t('technicalNote'), 'hint'));
 }
 
 function renderImportReport() {
@@ -86,7 +88,11 @@ function applyLocale() {
     for (const node of document.querySelectorAll('[data-i18n]')) node.textContent = t(node.dataset.i18n);
     for (const node of document.querySelectorAll('[data-i18n-label]')) node.setAttribute('aria-label', t(node.dataset.i18nLabel));
     for (const node of document.querySelectorAll('[data-i18n-placeholder]')) node.placeholder = t(node.dataset.i18nPlaceholder);
-    byId('language').value = locale;
+    languageControl.label = t('language');
+    languageControl.direction = document.documentElement.dir;
+    languageControl.text = dropdownText();
+    languageControl.setValue(locale);
+    byId('settings').title = t('language');
     byId('categories').replaceChildren();
     renderCategories();
     renderHelp();
@@ -122,19 +128,12 @@ function valueChoices(type) {
     return type === 'KEY' ? exportableKeys : type === 'MOUSE' ? mouseValues : type === 'WHEEL' ? wheelValues : [];
 }
 
+function dropdownText() {
+    return {search: t('searchOptions'), close: t('close'), empty: t('noOptions')};
+}
+
 function selectControl(label, choices, value) {
-    const select = element('select');
-    select.setAttribute('aria-label', label);
-    const empty = element('option', t('select'));
-    empty.value = '';
-    select.append(empty);
-    for (const choice of choices) {
-        const option = element('option', choice);
-        option.value = choice;
-        select.append(option);
-    }
-    select.value = value;
-    return select;
+    return createDropdown({label, choices: [{value: '', label: t('select')}, ...choices], value, placeholder: t('select'), text: dropdownText()});
 }
 
 function button(text, label, click) {
@@ -184,8 +183,8 @@ function renderBinding(entry, position) {
     const label = t('bindingLabel', {action: entry.action, number: position + 1});
     const type = selectControl(t('typeLabel', {binding: label}), typesForAction(entry.action), entry.type);
     const value = selectControl(t('valueLabel', {binding: label}), valueChoices(entry.type), entry.value);
-    type.dir = 'ltr';
-    value.dir = 'ltr';
+    type.element.dir = 'ltr';
+    value.element.dir = 'ltr';
     const capture = button(t('capture'), t('captureLabel', {binding: label}), () => {
         captureTarget = entry;
         captureButton = capture;
@@ -197,27 +196,23 @@ function renderBinding(entry, position) {
     const remove = button(t('remove'), t('removeLabel', {binding: label}), () => {
         entries = entries.filter(binding => binding !== entry);
         render();
-        const remaining = document.querySelector(`[data-action="${entry.action}"] .binding select`);
+        const remaining = document.querySelector(`[data-action="${entry.action}"] .dropdown-trigger`);
         (remaining || document.querySelector(`[data-action="${entry.action}"] .add-binding`)).focus();
     });
-    type.addEventListener('change', () => {
-        entry.type = type.value;
+    type.select.addEventListener('change', () => {
+        entry.type = type.select.value;
         entry.value = '';
-        value.replaceChildren(element('option', t('select')));
-        value.firstChild.value = '';
-        for (const choice of valueChoices(entry.type)) {
-            const option = element('option', choice);
-            option.value = choice;
-            value.append(option);
-        }
+        value.setChoices([{value: '', label: t('select')}, ...valueChoices(entry.type)]);
+        value.setValue('');
         capture.disabled = entry.type !== 'KEY';
         updateOutput();
     });
-    value.addEventListener('change', () => {
-        entry.value = value.value;
+    value.select.addEventListener('change', () => {
+        entry.value = value.select.value;
         updateOutput();
     });
-    row.append(type, value, capture, remove);
+    row.append(type.element, value.element, capture, remove);
+    bindingControls.set(entry, value);
     return row;
 }
 
@@ -236,7 +231,7 @@ function render() {
                 entries.push({action, type: 'KEY', value: ''});
                 render();
                 const rows = document.querySelectorAll(`[data-action="${action}"] .binding`);
-                rows[rows.length - 1].querySelectorAll('select')[1].focus();
+                rows[rows.length - 1].querySelectorAll('.dropdown-trigger')[1].focus();
             });
             add.className = 'add-binding';
             const title = element('div', undefined, 'action-title');
@@ -306,7 +301,7 @@ function updateOutput() {
     const renderedEntries = groups.flatMap(group => group.actions.flatMap(action => entries.filter(entry => entry.action === action)));
     rows.forEach((row, index) => {
         const invalid = result.errors.some(error => entries[error.index] === renderedEntries[index]);
-        for (const select of row.querySelectorAll('select')) select.setAttribute('aria-invalid', String(invalid));
+        for (const control of row.querySelectorAll('.dropdown-trigger')) control.setAttribute('aria-invalid', String(invalid));
     });
 }
 
@@ -342,9 +337,7 @@ window.addEventListener('keydown', event => {
     const target = captureTarget;
     target.value = result.value;
     cancelCapture();
-    const article = document.querySelector(`[data-action="${target.action}"]`);
-    const position = entries.filter(entry => entry.action === target.action).indexOf(target);
-    article.querySelectorAll('.binding')[position].querySelectorAll('select')[1].value = result.value;
+    bindingControls.get(target)?.setValue(result.value);
     updateOutput();
     setStatus('captured', {value: result.value, action: target.action});
 }, true);
@@ -433,15 +426,12 @@ function restoreView() {
 }
 window.addEventListener('popstate', restoreView);
 window.addEventListener('hashchange', restoreView);
-for (const item of locales) {
-    const option = element('option', item.name);
-    option.value = item.code;
-    option.lang = item.code;
-    option.dir = item.direction;
-    byId('language').append(option);
-}
-byId('settings').addEventListener('click', () => byId('settings-dialog').showModal());
-byId('language').addEventListener('change', event => {
+languageControl = createDropdown({
+    label: t('language'), choices: locales.map(item => ({value: item.code, label: item.name, lang: item.code, direction: item.direction})),
+    value: locale, placeholder: t('language'), text: dropdownText(), trigger: byId('settings'), direction: locales.find(item => item.code === locale).direction
+});
+byId('language-control').append(languageControl.element);
+languageControl.select.addEventListener('change', event => {
     locale = event.target.value;
     try { localStorage.setItem('anyps5-controls-language', locale); } catch {}
     applyLocale();

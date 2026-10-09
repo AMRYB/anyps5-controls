@@ -1,7 +1,7 @@
 import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 
-const files = new Set(['index.html', 'styles.css', 'app.js', 'mapping.js', 'keys.js', 'capture.js', 'validation.js', 'i18n.js']);
+const files = new Set(['index.html', 'styles.css', 'app.js', 'mapping.js', 'keys.js', 'capture.js', 'validation.js', 'i18n.js', 'dropdown.js']);
 const mime = {html: 'text/html', css: 'text/css', js: 'text/javascript'};
 const port = Number(process.env.PORT || 4173);
 const server = createServer(async (request, response) => {

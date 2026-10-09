@@ -189,7 +189,8 @@ export const messages = {
         "addLabel": "Add binding to {action}",
         "captureLabel": "Capture key for {binding}",
         "removeLabel": "Remove {binding}",
-        "technicalNote": "SDL names and INI identifiers stay in English. Some detailed technical diagnostics use English."
+        "searchOptions": "Search options",
+        "noOptions": "No matching options."
     },
     "ar-EG": {
         "controls": "التحكم",
@@ -206,8 +207,8 @@ export const messages = {
         "group0": "أزرار التحكم",
         "group1": "الأزرار العلوية",
         "group2": "الاتجاهات",
-        "group3": "العصاية الشمال",
-        "group4": "العصاية اليمين",
+        "group3": "الانالوج الشمال",
+        "group4": "الانالوج اليمين",
         "group5": "اللمس وأدوات تانية",
         "select": "اختار…",
         "add": "+ ضيف زرار",
@@ -268,7 +269,8 @@ export const messages = {
         "addLabel": "ضيف زرار لـ {action}",
         "captureLabel": "سجّل زرار لـ {binding}",
         "removeLabel": "شيل {binding}",
-        "technicalNote": "أسامي SDL وكلمات ملف INI بتفضل بالإنجليزي عشان الملف يشتغل صح. بعض رسائل التشخيص التقنية بتكون بالإنجليزي."
+        "searchOptions": "دور في القائمة",
+        "noOptions": "مفيش اختيار مطابق للبحث."
     },
     "es": {
         "controls": "Controles",
@@ -314,7 +316,9 @@ export const messages = {
         "faq2Question": "¿Por qué no se captura una tecla?",
         "faq2Answer": "El navegador o sistema puede interceptarla. Elígela en la lista. Escape cancela la captura; asígnala desde la lista.",
         "faq3Question": "¿Se guardan mis cambios solos?",
-        "faq3Answer": "Los cambios están en memoria: cópialos o descárgalos antes de recargar. Solo se guarda el idioma. Las acciones no configuradas conservan sus valores predeterminados."
+        "faq3Answer": "Los cambios están en memoria: cópialos o descárgalos antes de recargar. Solo se guarda el idioma. Las acciones no configuradas conservan sus valores predeterminados.",
+        "searchOptions": "Buscar opciones",
+        "noOptions": "No hay opciones coincidentes."
     },
     "fr": {
         "controls": "Commandes",
@@ -360,7 +364,9 @@ export const messages = {
         "faq2Question": "Pourquoi une touche n’est-elle pas capturée ?",
         "faq2Answer": "Un raccourci du navigateur ou du système peut l’intercepter. Choisissez-la dans la liste. Escape annule la capture ; attribuez-la via la liste.",
         "faq3Question": "Mes modifications sont-elles enregistrées ?",
-        "faq3Answer": "Les modifications restent en mémoire : copiez-les ou téléchargez-les avant de recharger. Seule la langue est mémorisée. Les actions non configurées gardent leurs valeurs par défaut."
+        "faq3Answer": "Les modifications restent en mémoire : copiez-les ou téléchargez-les avant de recharger. Seule la langue est mémorisée. Les actions non configurées gardent leurs valeurs par défaut.",
+        "searchOptions": "Rechercher une option",
+        "noOptions": "Aucune option trouvée."
     },
     "de": {
         "controls": "Steuerung",
@@ -406,7 +412,9 @@ export const messages = {
         "faq2Question": "Warum wird eine Taste nicht erfasst?",
         "faq2Answer": "Browser- oder Systemkürzel können sie abfangen. Wähle sie in der Liste. Escape bricht die Erfassung ab; weise Escape über die Liste zu.",
         "faq3Question": "Werden Änderungen automatisch gespeichert?",
-        "faq3Answer": "Änderungen bleiben im Speicher: vor dem Neuladen kopieren oder herunterladen. Nur die Sprache wird gespeichert. Nicht konfigurierte Aktionen behalten ihre Standardwerte."
+        "faq3Answer": "Änderungen bleiben im Speicher: vor dem Neuladen kopieren oder herunterladen. Nur die Sprache wird gespeichert. Nicht konfigurierte Aktionen behalten ihre Standardwerte.",
+        "searchOptions": "Optionen suchen",
+        "noOptions": "Keine passenden Optionen."
     },
     "it": {
         "controls": "Controlli",
@@ -452,7 +460,9 @@ export const messages = {
         "faq2Question": "Perché un tasto non viene acquisito?",
         "faq2Answer": "Il browser o il sistema potrebbe intercettarlo. Sceglilo dall’elenco. Escape annulla l’acquisizione; assegnalo dall’elenco.",
         "faq3Question": "Le modifiche si salvano automaticamente?",
-        "faq3Answer": "Le modifiche restano in memoria: copiale o scaricale prima di ricaricare. Si salva solo la lingua. Le azioni non configurate mantengono i valori predefiniti."
+        "faq3Answer": "Le modifiche restano in memoria: copiale o scaricale prima di ricaricare. Si salva solo la lingua. Le azioni non configurate mantengono i valori predefiniti.",
+        "searchOptions": "Cerca opzioni",
+        "noOptions": "Nessuna opzione trovata."
     },
     "pt": {
         "controls": "Controles",
@@ -498,7 +508,9 @@ export const messages = {
         "faq2Question": "Por que uma tecla não é capturada?",
         "faq2Answer": "O navegador ou sistema pode interceptá-la. Escolha na lista. Escape cancela a captura; atribua Escape pela lista.",
         "faq3Question": "As alterações são salvas sozinhas?",
-        "faq3Answer": "As alterações ficam na memória: copie ou baixe antes de recarregar. Só o idioma é salvo. Ações não configuradas mantêm os padrões."
+        "faq3Answer": "As alterações ficam na memória: copie ou baixe antes de recarregar. Só o idioma é salvo. Ações não configuradas mantêm os padrões.",
+        "searchOptions": "Buscar opções",
+        "noOptions": "Nenhuma opção encontrada."
     },
     "ru": {
         "controls": "Управление",
@@ -544,7 +556,9 @@ export const messages = {
         "faq2Question": "Почему клавиша не записывается?",
         "faq2Answer": "Браузер или система может перехватывать её. Выберите клавишу в списке. Escape отменяет запись; назначайте Escape через список.",
         "faq3Question": "Изменения сохраняются автоматически?",
-        "faq3Answer": "Изменения хранятся в памяти: копируйте или скачивайте их перед перезагрузкой. Сохраняется только язык. Ненастроенные действия используют значения по умолчанию."
+        "faq3Answer": "Изменения хранятся в памяти: копируйте или скачивайте их перед перезагрузкой. Сохраняется только язык. Ненастроенные действия используют значения по умолчанию.",
+        "searchOptions": "Поиск вариантов",
+        "noOptions": "Совпадений нет."
     },
     "tr": {
         "controls": "Kontroller",
@@ -590,7 +604,9 @@ export const messages = {
         "faq2Question": "Neden bir tuş yakalanmıyor?",
         "faq2Answer": "Tarayıcı veya sistem kısayolu engelleyebilir. Listeden seçin. Escape yakalamayı iptal eder; Escape tuşunu listeden atayın.",
         "faq3Question": "Değişiklikler otomatik kaydedilir mi?",
-        "faq3Answer": "Değişiklikler bellekte kalır: yenilemeden önce kopyalayın veya indirin. Yalnızca dil kaydedilir. Ayarlanmayan eylemler varsayılanlarını korur."
+        "faq3Answer": "Değişiklikler bellekte kalır: yenilemeden önce kopyalayın veya indirin. Yalnızca dil kaydedilir. Ayarlanmayan eylemler varsayılanlarını korur.",
+        "searchOptions": "Seçenek ara",
+        "noOptions": "Eşleşen seçenek yok."
     },
     "zh-Hans": {
         "controls": "控制",
@@ -636,7 +652,9 @@ export const messages = {
         "faq2Question": "为什么无法录入某个键？",
         "faq2Answer": "浏览器或系统快捷键可能会拦截它。请从列表选择。Escape 会取消录入；要分配 Escape，请使用列表。",
         "faq3Question": "修改会自动保存吗？",
-        "faq3Answer": "输入修改只保留在内存中，刷新前请复制或下载。浏览器只保存语言选择。未配置的操作保留默认输入。"
+        "faq3Answer": "输入修改只保留在内存中，刷新前请复制或下载。浏览器只保存语言选择。未配置的操作保留默认输入。",
+        "searchOptions": "搜索选项",
+        "noOptions": "没有匹配选项。"
     },
     "ja": {
         "controls": "操作",
@@ -682,7 +700,9 @@ export const messages = {
         "faq2Question": "キーが記録されないのはなぜですか？",
         "faq2Answer": "ブラウザーやシステムのショートカットが優先される場合があります。一覧から選んでください。Escape は記録をキャンセルするため、一覧から割り当てます。",
         "faq3Question": "変更は自動保存されますか？",
-        "faq3Answer": "入力の変更はメモリ内だけです。再読み込み前にコピーかダウンロードをしてください。言語のみ保存されます。未設定の操作は初期設定を使います。"
+        "faq3Answer": "入力の変更はメモリ内だけです。再読み込み前にコピーかダウンロードをしてください。言語のみ保存されます。未設定の操作は初期設定を使います。",
+        "searchOptions": "選択肢を検索",
+        "noOptions": "一致する選択肢がありません。"
     },
     "ko": {
         "controls": "컨트롤",
@@ -728,7 +748,9 @@ export const messages = {
         "faq2Question": "키가 기록되지 않는 이유는 무엇인가요?",
         "faq2Answer": "브라우저나 시스템 단축키가 가로챌 수 있습니다. 목록에서 선택하세요. Escape는 기록을 취소하므로 목록에서 지정하세요.",
         "faq3Question": "변경 사항이 자동 저장되나요?",
-        "faq3Answer": "입력 변경은 메모리에만 있습니다. 새로고침 전에 복사하거나 다운로드하세요. 언어 선택만 저장됩니다. 설정하지 않은 동작은 기본값을 유지합니다."
+        "faq3Answer": "입력 변경은 메모리에만 있습니다. 새로고침 전에 복사하거나 다운로드하세요. 언어 선택만 저장됩니다. 설정하지 않은 동작은 기본값을 유지합니다.",
+        "searchOptions": "옵션 검색",
+        "noOptions": "일치하는 옵션이 없습니다."
     },
     "hi": {
         "controls": "नियंत्रण",
@@ -774,7 +796,9 @@ export const messages = {
         "faq2Question": "कुंजी रिकॉर्ड क्यों नहीं होती?",
         "faq2Answer": "ब्राउज़र या सिस्टम का शॉर्टकट उसे रोक सकता है। सूची से चुनें। Escape रिकॉर्डिंग रद्द करता है; इसे सूची से जोड़ें।",
         "faq3Question": "क्या बदलाव अपने आप सेव होते हैं?",
-        "faq3Answer": "बदलाव केवल मेमोरी में रहते हैं: रीलोड से पहले कॉपी या डाउनलोड करें। केवल भाषा सेव होती है। बिना बदले काम अपने डिफ़ॉल्ट रखते हैं।"
+        "faq3Answer": "बदलाव केवल मेमोरी में रहते हैं: रीलोड से पहले कॉपी या डाउनलोड करें। केवल भाषा सेव होती है। बिना बदले काम अपने डिफ़ॉल्ट रखते हैं।",
+        "searchOptions": "विकल्प खोजें",
+        "noOptions": "कोई विकल्प नहीं मिला।"
     },
     "bn": {
         "controls": "নিয়ন্ত্রণ",
@@ -820,7 +844,9 @@ export const messages = {
         "faq2Question": "কোনো কী রেকর্ড হচ্ছে না কেন?",
         "faq2Answer": "ব্রাউজার বা সিস্টেম শর্টকাট সেটি আটকাতে পারে। তালিকা থেকে বাছুন। Escape রেকর্ড বাতিল করে; তালিকা থেকে যোগ করুন।",
         "faq3Question": "পরিবর্তন কি নিজে থেকে সেভ হয়?",
-        "faq3Answer": "পরিবর্তন শুধু মেমোরিতে থাকে: রিলোডের আগে কপি বা ডাউনলোড করুন। শুধু ভাষা সেভ হয়। না বদলানো কাজগুলো ডিফল্ট রাখে।"
+        "faq3Answer": "পরিবর্তন শুধু মেমোরিতে থাকে: রিলোডের আগে কপি বা ডাউনলোড করুন। শুধু ভাষা সেভ হয়। না বদলানো কাজগুলো ডিফল্ট রাখে।",
+        "searchOptions": "বিকল্প খুঁজুন",
+        "noOptions": "কোনো বিকল্প মেলেনি।"
     },
     "ur": {
         "controls": "کنٹرول",
@@ -866,7 +892,9 @@ export const messages = {
         "faq2Question": "کلید ریکارڈ کیوں نہیں ہوتی؟",
         "faq2Answer": "براؤزر یا نظام کا شارٹ کٹ روک سکتا ہے۔ فہرست سے منتخب کریں۔ Escape ریکارڈنگ منسوخ کرتا ہے؛ اسے فہرست سے مقرر کریں۔",
         "faq3Question": "کیا تبدیلیاں خود محفوظ ہوتی ہیں؟",
-        "faq3Answer": "تبدیلیاں صرف میموری میں رہتی ہیں: ری لوڈ سے پہلے کاپی یا ڈاؤن لوڈ کریں۔ صرف زبان محفوظ ہوتی ہے۔ غیر تبدیل شدہ اعمال اپنی طے شدہ ترتیب رکھتے ہیں۔"
+        "faq3Answer": "تبدیلیاں صرف میموری میں رہتی ہیں: ری لوڈ سے پہلے کاپی یا ڈاؤن لوڈ کریں۔ صرف زبان محفوظ ہوتی ہے۔ غیر تبدیل شدہ اعمال اپنی طے شدہ ترتیب رکھتے ہیں۔",
+        "searchOptions": "اختیارات تلاش کریں",
+        "noOptions": "کوئی اختیار نہیں ملا۔"
     },
     "fa": {
         "controls": "کنترل‌ها",
@@ -912,7 +940,9 @@ export const messages = {
         "faq2Question": "چرا کلید ثبت نمی‌شود؟",
         "faq2Answer": "میانبر مرورگر یا سیستم ممکن است آن را بگیرد. از فهرست انتخاب کنید. Escape ثبت را لغو می‌کند؛ آن را از فهرست تعیین کنید.",
         "faq3Question": "آیا تغییرات خودکار ذخیره می‌شوند؟",
-        "faq3Answer": "تغییرات فقط در حافظه‌اند: قبل از بارگذاری دوباره کپی یا دانلود کنید. تنها زبان ذخیره می‌شود. اعمال تنظیم‌نشده پیش‌فرض خود را حفظ می‌کنند."
+        "faq3Answer": "تغییرات فقط در حافظه‌اند: قبل از بارگذاری دوباره کپی یا دانلود کنید. تنها زبان ذخیره می‌شود. اعمال تنظیم‌نشده پیش‌فرض خود را حفظ می‌کنند.",
+        "searchOptions": "جستجوی گزینه‌ها",
+        "noOptions": "گزینه‌ای پیدا نشد."
     },
     "id": {
         "controls": "Kontrol",
@@ -958,7 +988,9 @@ export const messages = {
         "faq2Question": "Mengapa tombol tidak direkam?",
         "faq2Answer": "Pintasan browser atau sistem mungkin menangkapnya. Pilih dari daftar. Escape membatalkan rekaman; tetapkan Escape melalui daftar.",
         "faq3Question": "Apakah perubahan disimpan otomatis?",
-        "faq3Answer": "Perubahan hanya di memori: salin atau unduh sebelum memuat ulang. Hanya bahasa yang disimpan. Aksi yang tidak diatur tetap memakai bawaan."
+        "faq3Answer": "Perubahan hanya di memori: salin atau unduh sebelum memuat ulang. Hanya bahasa yang disimpan. Aksi yang tidak diatur tetap memakai bawaan.",
+        "searchOptions": "Cari opsi",
+        "noOptions": "Tidak ada opsi yang cocok."
     },
     "vi": {
         "controls": "Điều khiển",
@@ -1004,7 +1036,9 @@ export const messages = {
         "faq2Question": "Tại sao không ghi được phím?",
         "faq2Answer": "Trình duyệt hoặc hệ thống có thể chặn phím tắt. Chọn từ danh sách. Escape hủy ghi phím; hãy gán Escape từ danh sách.",
         "faq3Question": "Thay đổi có tự lưu không?",
-        "faq3Answer": "Thay đổi chỉ ở trong bộ nhớ: sao chép hoặc tải xuống trước khi tải lại. Chỉ ngôn ngữ được lưu. Hành động chưa cấu hình giữ mặc định."
+        "faq3Answer": "Thay đổi chỉ ở trong bộ nhớ: sao chép hoặc tải xuống trước khi tải lại. Chỉ ngôn ngữ được lưu. Hành động chưa cấu hình giữ mặc định.",
+        "searchOptions": "Tìm tùy chọn",
+        "noOptions": "Không có tùy chọn phù hợp."
     },
     "th": {
         "controls": "การควบคุม",
@@ -1050,7 +1084,9 @@ export const messages = {
         "faq2Question": "ทำไมบางปุ่มจึงบันทึกไม่ได้?",
         "faq2Answer": "ทางลัดของเบราว์เซอร์หรือระบบอาจดักปุ่มไว้ เลือกจากรายการแทน Escape ยกเลิกการบันทึก จึงต้องกำหนดจากรายการ",
         "faq3Question": "บันทึกการเปลี่ยนแปลงอัตโนมัติไหม?",
-        "faq3Answer": "การเปลี่ยนแปลงอยู่ในหน่วยความจำเท่านั้น คัดลอกหรือดาวน์โหลดก่อนโหลดใหม่ บันทึกเฉพาะภาษา การกระทำที่ยังไม่ตั้งค่าจะใช้ค่าเริ่มต้น"
+        "faq3Answer": "การเปลี่ยนแปลงอยู่ในหน่วยความจำเท่านั้น คัดลอกหรือดาวน์โหลดก่อนโหลดใหม่ บันทึกเฉพาะภาษา การกระทำที่ยังไม่ตั้งค่าจะใช้ค่าเริ่มต้น",
+        "searchOptions": "ค้นหาตัวเลือก",
+        "noOptions": "ไม่พบตัวเลือกที่ตรงกัน"
     },
     "sw": {
         "controls": "Vidhibiti",
@@ -1096,7 +1132,9 @@ export const messages = {
         "faq2Question": "Kwa nini kitufe hakirekodiwi?",
         "faq2Answer": "Njia ya mkato ya kivinjari au mfumo inaweza kukizuia. Chagua kwenye orodha. Escape hughairi kurekodi; kiweke kupitia orodha.",
         "faq3Question": "Mabadiliko huhifadhiwa kiotomatiki?",
-        "faq3Answer": "Mabadiliko hubaki kwenye kumbukumbu: nakili au pakua kabla ya kupakia upya. Lugha pekee huhifadhiwa. Vitendo visivyosanidiwa hutumia chaguo-msingi."
+        "faq3Answer": "Mabadiliko hubaki kwenye kumbukumbu: nakili au pakua kabla ya kupakia upya. Lugha pekee huhifadhiwa. Vitendo visivyosanidiwa hutumia chaguo-msingi.",
+        "searchOptions": "Tafuta chaguo",
+        "noOptions": "Hakuna chaguo linalolingana."
     },
     "nl": {
         "controls": "Bediening",
@@ -1142,7 +1180,9 @@ export const messages = {
         "faq2Question": "Waarom wordt een toets niet vastgelegd?",
         "faq2Answer": "Een browser- of systeemsneltoets kan hem onderscheppen. Kies uit de lijst. Escape annuleert vastleggen; wijs Escape via de lijst toe.",
         "faq3Question": "Worden wijzigingen automatisch opgeslagen?",
-        "faq3Answer": "Wijzigingen staan alleen in het geheugen: kopieer of download vóór herladen. Alleen de taal wordt opgeslagen. Ongewijzigde acties houden hun standaardwaarden."
+        "faq3Answer": "Wijzigingen staan alleen in het geheugen: kopieer of download vóór herladen. Alleen de taal wordt opgeslagen. Ongewijzigde acties houden hun standaardwaarden.",
+        "searchOptions": "Opties zoeken",
+        "noOptions": "Geen passende opties."
     },
     "pl": {
         "controls": "Sterowanie",
@@ -1188,7 +1228,9 @@ export const messages = {
         "faq2Question": "Dlaczego klawisz nie jest rejestrowany?",
         "faq2Answer": "Skrót przeglądarki lub systemu może go przechwycić. Wybierz z listy. Escape anuluje rejestrację; przypisz go z listy.",
         "faq3Question": "Czy zmiany zapisują się automatycznie?",
-        "faq3Answer": "Zmiany są tylko w pamięci: skopiuj lub pobierz przed odświeżeniem. Zapisywany jest tylko język. Nieustawione akcje zachowują wartości domyślne."
+        "faq3Answer": "Zmiany są tylko w pamięci: skopiuj lub pobierz przed odświeżeniem. Zapisywany jest tylko język. Nieustawione akcje zachowują wartości domyślne.",
+        "searchOptions": "Szukaj opcji",
+        "noOptions": "Brak pasujących opcji."
     }
 };
 
@@ -1214,4 +1256,8 @@ export function diagnostic(locale, message) {
         .replace('Duplicate binding ignored.', 'الربط المتكرر تم تجاهله.')
         .replace('This physical key cannot be captured in the current INI format. Select an SDL key from the list.', 'الزرار ده مينفعش يتسجل بالصيغة الحالية لملف INI. اختار زرار SDL من القائمة.')
         .replace('Composition and dead keys are ambiguous. Select an SDL key from the list.', 'زرار تركيب الحروف مش واضح في التسجيل. اختار زرار SDL من القائمة.');
+}
+
+export function initialLocale(savedLocale) {
+    return locales.some(item => item.code === savedLocale) ? savedLocale : 'en';
 }

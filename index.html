@@ -16,7 +16,7 @@
         <nav class="system-nav" aria-label="Main navigation" data-i18n-label="mainNav"><a class="current" href="#controls" data-view="controls" data-i18n="controls">Controls</a><a href="#configuration" data-view="configuration" data-i18n="configuration">Configuration</a><a href="#help" data-view="help" data-i18n="help">Help</a></nav>
         <div class="system-tools">
             <button id="focus-search" class="icon-button" type="button" aria-label="Find an action" data-i18n-label="find"><span class="search-icon" aria-hidden="true"></span></button>
-            <button id="settings" class="icon-button" type="button" aria-label="Settings" data-i18n-label="settings"><span aria-hidden="true">⚙</span></button>
+            <button id="settings" class="icon-button" type="button" aria-label="Language" data-i18n-label="language"><span class="translation-icon" aria-hidden="true"><span>A</span><span>ع</span></span></button>
             <time id="clock" aria-label="Local time" data-i18n-label="clock"></time>
         </div>
     </header>
@@ -66,11 +66,12 @@
             <button type="submit" value="discard" data-i18n="discard">Discard changes</button>
         </form>
     </dialog>
-    <dialog id="settings-dialog" aria-labelledby="settings-title">
-        <h2 id="settings-title" data-i18n="settings">Settings</h2>
-        <label class="language-label" for="language" data-i18n="language">Language</label>
-        <select id="language" dir="auto" size="8"></select>
-        <form method="dialog"><button type="submit" data-i18n="close" autofocus>Close</button></form>
+    <div id="language-control" hidden></div>
+    <dialog id="picker-dialog" aria-labelledby="picker-title">
+        <div class="picker-heading"><h2 id="picker-title"></h2><button id="picker-close" type="button">Close</button></div>
+        <input id="picker-search" type="search" autocomplete="off" spellcheck="false" dir="auto">
+        <div id="picker-options" role="listbox"></div>
+        <p id="picker-empty" class="hint" hidden></p>
     </dialog>
     <noscript>This configurator needs JavaScript enabled.</noscript>
 </body>

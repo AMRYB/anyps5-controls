@@ -25,7 +25,9 @@ Choose a control group, add keyboard/mouse/wheel bindings, and preview, copy or 
 
 Controls, Configuration and Help are separate views. Configuration replaces the input editor and provides the full-width preview and export controls; switching views preserves your bindings. Help contains expandable answers to common setup questions.
 
-Open Settings using the gear button to choose from 22 interface and FAQ languages, with Egyptian Arabic first and selected by default. Arabic, Urdu and Persian use a right-to-left layout. The language preference is saved locally; input configurations are still kept in memory. SDL key names and INI identifiers remain canonical English tokens. Detailed status and diagnostic strings use English fallbacks outside Egyptian Arabic.
+Open the translation button to choose from 22 interface and FAQ languages. First visits use English; a saved language choice takes priority on later visits. Egyptian Arabic is first in the language list. Arabic, Urdu and Persian use a right-to-left layout. The language preference is saved locally; input configurations are still kept in memory.
+
+Input and language menus use a searchable custom picker, anchored to the field on larger screens and presented as a bottom sheet on phones. Escape dismisses a picker without changing its selection. Arrow keys, Home, End and Enter navigate and select options. The responsive layout keeps fields and export controls within narrow windows and uses subtle focus feedback without white outlines.
 
 Only configured actions are exported. Their first binding replaces built-in inputs; further bindings are alternatives. Omitted actions retain their built-in inputs. Removing all bindings restores defaults rather than disabling an action. Physical controller mapping is handled separately by AnyPS5.
 

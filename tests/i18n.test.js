@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {diagnostic, locales, messages, translate} from '../i18n.js';
+import {diagnostic, initialLocale, locales, messages, translate} from '../i18n.js';
 import {parseIni, serialize} from '../validation.js';
 
 test('every selectable language supplies the main interface and every FAQ', () => {
@@ -14,6 +14,11 @@ test('every selectable language supplies the main interface and every FAQ', () =
         assert.equal(locale.direction, ['ar-EG', 'ur', 'fa'].includes(locale.code) ? 'rtl' : 'ltr');
         for (const key of required) assert.ok(messages[locale.code][key], `${locale.code}: ${key}`);
     }
+});
+
+test('first visits use English while valid saved language preferences are retained', () => {
+    for (const saved of [undefined, null, '', 'unsupported']) assert.equal(initialLocale(saved), 'en');
+    for (const locale of locales) assert.equal(initialLocale(locale.code), locale.code);
 });
 
 test('language substitution preserves canonical inputs and exported INI bytes', () => {
