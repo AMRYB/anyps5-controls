@@ -2,6 +2,10 @@
 
 A browser-based keyboard and mouse input configurator for [AnyPS5](https://github.com/boykopovar/AnyPS5), maintained by Amr Yasser. This independent companion repository is not an official AnyPS5 release or an emulator.
 
+## Try online
+
+Open [AnyPS5 Controls](https://amryb.github.io/anyps5-controls/) directly in your browser. No installation or account is needed. Configuration processing stays in your browser; export your file before reloading.
+
 ## Use locally
 
 Requires Node.js 22 or later. No dependency installation is needed.
@@ -43,7 +47,7 @@ The suite checks serialization, input restrictions, imports, conflicts and keybo
 
 ## Hosting
 
-Serve the repository root with any static HTTP host. GitHub Pages can serve the root of `main` without a build step; `.nojekyll` is included. Hosting is configured separately from the source code.
+The live site is hosted on GitHub Pages from the root of `main`; `.nojekyll` is included and no build step is needed. You can also serve the repository root with any static HTTP host.
 
 ## Credits and license
 
